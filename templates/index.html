@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .converter {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+        }
+        h2 {
+            text-align: center;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="converter">
+        <h2>Temperature Converter</h2>
+        <form method="POST">
+            <input type="number" name="temperature" step="any" placeholder="Enter temperature" required>
+            <select name="unit" required>
+                <option value="celsius">Celsius</option>
+                <option value="fahrenheit">Fahrenheit</option>
+                <option value="kelvin">Kelvin</option>
+            </select>
+            <button type="submit">Convert</button>
+        </form>
+
+        {% if converted %}
+            <div class="results">
+                <h3>Converted Values:</h3>
+                <ul>
+                    {% for unit, value in converted.items() %}
+                        <li><strong>{{ unit }}:</strong> {{ "%.2f"|format(value) }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
