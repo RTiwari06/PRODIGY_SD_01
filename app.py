@@ -2,32 +2,27 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-def convert_temperature(value, unit):
-    results = {}
-    if unit == "celsius":
-        results["Fahrenheit"] = (value * 9/5) + 32
-        results["Kelvin"] = value + 273.15
-    elif unit == "fahrenheit":
-        celsius = (value - 32) * 5/9
-        results["Celsius"] = celsius
-        results["Kelvin"] = celsius + 273.15
-    elif unit == "kelvin":
-        celsius = value - 273.15
-        results["Celsius"] = celsius
-        results["Fahrenheit"] = (celsius * 9/5) + 32
-    return results
+@app.route('/', methods=['GET', 'POST'])
+def convert_temperature():
+    celsius = fahrenheit = kelvin = None
+    if request.method == 'POST':
+        temp = float(request.form.get('temperature'))
+        unit = request.form.get('unit')
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    converted = None
-    if request.method == "POST":
-        try:
-            temp_value = float(request.form["temperature"])
-            unit = request.form["unit"].lower()
-            converted = convert_temperature(temp_value, unit)
-        except ValueError:
-            converted = {"Error": "Invalid input. Please enter a valid number."}
-    return render_template("index.html", converted=converted)
+        if unit == 'celsius':
+            celsius = temp
+            fahrenheit = (temp * 9/5) + 32
+            kelvin = temp + 273.15
+        elif unit == 'fahrenheit':
+            fahrenheit = temp
+            celsius = (temp - 32) * 5/9
+            kelvin = (temp - 32) * 5/9 + 273.15
+        elif unit == 'kelvin':
+            kelvin = temp
+            celsius = temp - 273.15
+            fahrenheit = (temp - 273.15) * 9/5 + 32
+
+    return render_template('index.html', celsius=celsius, fahrenheit=fahrenheit, kelvin=kelvin)
 
 if __name__ == "__main__":
     app.run(debug=True)
